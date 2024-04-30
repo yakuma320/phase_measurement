@@ -26,15 +26,10 @@ const double hc=0.389379660E9;
 
 double vacc(double W)
 {
-    for(int i=0; i<Nvac; i++){
-        if(W>=Evac[i]&&W<Evac[i+1]) {
-            if(Evac[i]!=Evac[i+1]) return CSvac[i]+(W-Evac[i])*(CSvac[i+1]-CSvac[i])/(Evac[i+1]-Evac[i]);
-            else {
-                cerr<<"Error: x1=x2,this is not permitted"<<endl;
-                exit(-1);
-            }
-        }
-    }
+	  int bin=int((W-2.5)/0.0034);
+		double vp=1.0;
+		if(bin>=0&&bin<500)  vp=CSvac[bin]+(W-Evac[bin])*(CSvac[bin+1]-CSvac[bin])/(Evac[bin+1]-Evac[bin]);
+		return vp;
 }
 double phi(double scos,double y)
 {
@@ -148,6 +143,12 @@ double intXS(double ecm, double par0, double par1, double par2, double par3, dou
 
 int main()
 {
+    ifstream vacfile("vacc_nopsip_gen.dat");//,ios::in);
+    for(int i=0;i<Nvac;i++)
+    {
+        vacfile>>Evac[i]>>CSvac[i];
+    }
+
 		double MJ=3.686;
 		double GT=294E-6;
 		double GE=2.33e-6;
